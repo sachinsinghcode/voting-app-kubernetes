@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote for Dogs or Cats</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .vote-buttons {
+            margin-top: 20px;
+        }
+        .vote-buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vote for Dogs or Cats</h1>
+    <div class="vote-buttons">
+        <button id="vote-dog">Vote for Dogs</button>
+        <button id="vote-cat">Vote for Cats</button>
+    </div>
+    <h2>Current Votes:</h2>
+    <p>Dogs: <span id="dog-votes">0</span></p>
+    <p>Cats: <span id="cat-votes">0</span></p>
+
+    <script>
+        async function fetchVotes() {
+            const response = await fetch('api/votes');
+            const data = await response.json();
+            document.getElementById('dog-votes').textContent = data.dogs;
+            document.getElementById('cat-votes').textContent = data.cats;
+        }
+
+        async function vote(animal) {
+            await fetch(`/api/vote/${animal}`, {
+                method: 'POST'
+            });
+            fetchVotes();
+        }
+
+        document.getElementById('vote-dog').addEventListener('click', () => vote('dogs'));
+        document.getElementById('vote-cat').addEventListener('click', () => vote('cats'));
+
+        // Fetch votes on page load
+        fetchVotes();
+    </script>
+</body>
+</html>
